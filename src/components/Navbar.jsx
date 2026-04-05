@@ -15,11 +15,9 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY
-      // Show when scrolling up or at top, hide when scrolling down
       setVisible(currentY < lastScrollY.current || currentY < 10)
       lastScrollY.current = currentY
     }
-
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -32,10 +30,10 @@ export default function Navbar() {
       }}
       className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100"
     >
-      <div className="h-14 flex justify-center gap-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 grid grid-cols-3 items-center">
         {/* Logo */}
         <a href="#" className="flex items-center gap-1.5 font-bold text-lg text-gray-900">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="text-gray-900">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <rect x="0" y="0" width="8" height="8" fill="currentColor" />
             <rect x="10" y="0" width="8" height="8" fill="currentColor" />
             <rect x="0" y="10" width="8" height="8" fill="currentColor" />
@@ -43,14 +41,11 @@ export default function Navbar() {
           Floka
         </a>
 
-        {/* Desktop nav links — centered */}
-        <ul className="hidden md:flex items-center justify-center gap-40">
+        {/* Desktop nav links */}
+        <ul className="hidden md:flex items-center justify-center gap-8 lg:gap-12">
           {navLinks.map((link) => (
             <li key={link.label}>
-              <a
-                href={link.href}
-                className="text-base font-semibold text-gray-700 hover:text-gray-900 transition-colors"
-              >
+              <a href={link.href} className="text-base font-semibold text-gray-700 hover:text-gray-900 transition-colors">
                 {link.label}
               </a>
             </li>
@@ -59,7 +54,7 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="hidden md:flex items-center justify-end gap-4">
-          <a href="mailto:info@floka.com" className="text-base text-gray-700 font-semibold hover:text-gray-900 transition-colors">
+          <a href="mailto:info@floka.com" className="text-sm text-gray-700 font-semibold hover:text-gray-900 transition-colors">
             info@floka.com
           </a>
           <button className="w-8 h-8 flex flex-col justify-center items-center gap-1.5 group">
@@ -71,7 +66,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden flex flex-col gap-1.5 p-1 justify-self-end col-start-3"
+          className="md:hidden justify-self-end flex flex-col gap-1.5 p-1"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -85,7 +80,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
           {navLinks.map((link) => (
-            <a key={link.label} href={link.href} className="text-sm text-gray-700">
+            <a key={link.label} href={link.href} className="text-sm font-semibold text-gray-700">
               {link.label}
             </a>
           ))}

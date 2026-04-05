@@ -1,2 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap');
 @import "tailwindcss";
 @plugin "daisyui";
+
+@theme {
+  --font-funnel: "Funnel Display", sans-serif;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 5s linear infinite;
+  will-change: transform;
+}
