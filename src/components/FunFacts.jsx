@@ -1,3 +1,5 @@
+import { useRef, useEffect, useState } from 'react'
+
 const overlayAvatars = [
   'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=80&q=80',
   'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=80&q=80',
@@ -10,6 +12,31 @@ function StatsCard({ children, className = '' }) {
 }
 
 export default function FunFacts() {
+  const headingRef = useRef(null)
+  const [revealed, setRevealed] = useState(false)
+
+  useEffect(() => {
+    const el = headingRef.current
+    if (!el) return
+
+    // Small delay ensures the browser has painted the hidden state
+    // before the observer can trigger the reveal
+    const timer = setTimeout(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setRevealed(true)
+            observer.disconnect()
+          }
+        },
+        { threshold: 0, rootMargin: '0px' }
+      )
+      observer.observe(el)
+      return () => observer.disconnect()
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [])
   return (
     <section className="bg-gray-100 px-4 sm:px-6 lg:px-12 py-12 sm:py-16">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
@@ -19,7 +46,7 @@ export default function FunFacts() {
           <img
             src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80"
             alt="Team"
-            className="w-full h-full max-h-[600px] object-cover rounded-2xl shadow-lg"
+            className="w-full h-full max-h-150 object-cover rounded-2xl shadow-lg"
           />
         </div>
 
@@ -28,10 +55,22 @@ export default function FunFacts() {
 
           {/* Top text block */}
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-3">Fun Facts</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
-              Consistently delivering impactful results through a perfect blend of design and functionality.
-            </h2>
+            <p className="text-[18px] uppercase tracking-widest text-gray-400 mb-3">Fun Facts</p>
+
+            {/* Clip-path left-to-right reveal */}
+            <div className="overflow-hidden" ref={headingRef}>
+              <h2
+                className="text-4xl sm:text-5xl font-semibold font-funnel text-gray-900 leading-tight"
+                style={{
+                  transform: revealed ? 'translateX(0)' : 'translateX(-50px)',
+                  opacity: revealed ? 1 : 0,
+                  transition: 'transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, opacity 0.9s ease 0.1s',
+                  willChange: 'transform, opacity',
+                }}
+              >
+                Consistently delivering impactful results through a perfect blend of design and functionality.
+              </h2>
+            </div>
           </div>
 
           {/* Stats row — 2 col */}
